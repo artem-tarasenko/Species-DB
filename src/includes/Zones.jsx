@@ -1,77 +1,52 @@
 import React, {useState, useEffect} from "react";
-import AddBox from "@material-ui/icons/AddBox";
-import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import MaterialTable from '@material-table/core';
 import axios from "axios";
-
+//includes
 import endpoints from "./endpoints.jsx";
+import exportTable from "./ExportTable.jsx";
 
 function Zones() {
-    //props: Source, tableHeaders, data, name
-
 	const [data, setData] = useState({headers: [], data: []}); //first array - headers to the table, second - table data
+    const source = endpoints[2];
+    const tableTitle = `Таблица "${source.localizedName}"`;
 
-    let source = endpoints[2];
-    // useEffect( () => fetchData(source.link), [source]);
-
-	// function fetchData(link) {
-	// 	fetch(link)
-	// 		.then(res => res.json())
-	// 		.then(data => setData(data));
-	// }
-
-    // useEffect(async () => {
-    //     const result = await axios(props.source);
-    //     setData(result.data);
-    //   }, []);
-
+    console.log(data);
     
     useEffect( () => getPosts(), [source]);
 
     async function getPosts() {
         try {
             const fetchedData = await axios.get(source.link);
-
-            const headers = endpoints.find( item => item.name == source.name).headers;; //Kinds
-
-            // console.group('Axios');
-            //     console.log("fetched data ## source.name ## headers");
-            //     console.log(fetchedData.data);
-            //     console.log(source.name);
-            //     console.log(headers);
-            // console.groupEnd();
+            const headers = endpoints.find( item => item.name === source.name).headers;; //Kinds
 
             setData({
                 headers: headers,
                 data: fetchedData.data
             })
-            
-
 
         } catch (err) {
             console.error(err.message);
         }
     };
 
-    console.group('TABLE');
-        console.log("TABLE RE-RENDERED");
-        console.log(source);
-        //console.log(headers);
-        console.log(data);
-    console.groupEnd();
+    function exportWrapper(cols, datas) { exportTable(cols, datas, tableTitle) }
 
-    return  <>
-                <h3>Maretial UI Table component</h3>
-				<div className="data-container">
-					{/* <MaterialTable
-						// columns = {[{field: "surname", title: "Surname"}, {field: "name", title: "name"}, {field: "nick", title: "Nickname"}, {field: "age", title: "Age"}]}
-						columns = {data.headers}
-						data={data.data}
-						title={props.source.name ? `${props.source.name} table` : null}
-					/>			 */}
-                    <MaterialTable columns={data.headers} data={data.data} title="Zones table" />
-				</div>
-            </>
+    return  <div className="data-container">
+                <MaterialTable 
+                    columns={data.headers} 
+                    data={data.data} 
+                    title={tableTitle}
+                    options={{
+                        columnsButton: true,
+                        filtering: true,
+                        paging: true,
+                        pageSize: 10,
+                        pageSizeOptions: [10, 30, 50, 100, 300],
+                        emptyRowsWhenPaging: false,
+                        exportMenu: [{ label: 'Сохранить в PDF', exportFunc: (cols, datas) => exportWrapper(cols, datas) }]
+                    }} 
+                />
+            </div>
 }
 
 export default Zones;

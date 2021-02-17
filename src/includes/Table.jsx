@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from "react";
-import AddBox from "@material-ui/icons/AddBox";
-import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import MaterialTable from '@material-table/core';
 import axios from "axios";
 
 import endpoints from "./endpoints.jsx";
+import exportTable from "./ExportTable.jsx";
+
 
 function Table() {
-    //props: Source, tableHeaders, data, name
 	const [data, setData] = useState({headers: [], data: []}); //first array - headers to the table, second - table data
-    let source = endpoints[0];
+    const source = endpoints[0];
+    const tableTitle = `Таблица "${source.localizedName}"`;
+
+    console.log(data);
     
     useEffect( () => getPosts(), [source]);
 
@@ -22,24 +24,31 @@ function Table() {
                 headers: headers,
                 data: fetchedData.data
             })
+
         } catch (err) {
             console.error(err.message);
         }
     };
 
-    console.log(data);
-    return  <>
-                <h3>Maretial UI Table component</h3>
-				<div className="data-container">
-					{/* <MaterialTable
-						// columns = {[{field: "surname", title: "Surname"}, {field: "name", title: "name"}, {field: "nick", title: "Nickname"}, {field: "age", title: "Age"}]}
-						columns = {data.headers}
-						data={data.data}
-						title={props.source.name ? `${props.source.name} table` : null}
-					/>			 */}
-                    <MaterialTable columns={data.headers} data={data.data} title="Species table" options={{columnsButton: true}} />
-				</div>
-            </>
+    function exportWrapper(cols, datas) { exportTable(cols, datas, tableTitle) }
+
+    return  <div className="data-container">
+                <MaterialTable 
+                    columns={data.headers} 
+                    data={data.data} 
+                    title={tableTitle}
+                    options={{
+                        columnsButton: true,
+                        filtering: true,
+                        paging: true,
+                        pageSize: 10,
+                        pageSizeOptions: [10, 30, 50, 100, 300],
+                        emptyRowsWhenPaging: false,
+                        exportMenu: [{ label: 'Сохранить в PDF', exportFunc: (cols, datas, tableTitle) => exportWrapper(cols, datas) }]
+                    }} 
+                />
+            </div>
+
 }
 
 export default Table;
