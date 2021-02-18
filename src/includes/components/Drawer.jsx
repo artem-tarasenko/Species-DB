@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 
+
 import Badge from '@material-ui/core/Badge';
 import BurstModeOutlinedIcon from '@material-ui/icons/BurstModeOutlined';
 import ZoomInOutlinedIcon from '@material-ui/icons/ZoomInOutlined';
@@ -25,7 +26,9 @@ function ZoomIcon(props) {
     console.log(iconState);
 
     return  <>
-                {iconState ? <ZoomOutOutlinedIcon fontSize="large" onClick={changeIcon} /> : <ZoomInOutlinedIcon fontSize="large" onClick={changeIcon} />}
+                {iconState ? 
+                    <ZoomOutOutlinedIcon fontSize="large" onClick={changeIcon} /> : 
+                    <ZoomInOutlinedIcon fontSize="large" onClick={changeIcon} />}
             </>
 }
 
@@ -54,11 +57,7 @@ export default function TemporaryDrawer(props) {
 
     function resizePreview() {
         const container = document.getElementById("preview-container");
-        container.classList.toggle("extend");
-
-
-        console.log(props.content);
-        
+        container.classList.toggle("extend");        
     }
 
 
@@ -81,8 +80,8 @@ export default function TemporaryDrawer(props) {
 
         <React.Fragment key={"right"}>
 
-                <Button onClick={toggleDrawer("right", true)}>
-                    <Badge color="secondary" badgeContent={imageCount} showZero>
+                <Button onClick={imageCount > 0 ? toggleDrawer("right", true) : toggleDrawer("right", false)}>
+                    <Badge color={imageCount > 0 ? "primary" : "secondary" } badgeContent={imageCount} showZero>
                         <BurstModeOutlinedIcon />
                     </Badge>    
                 </Button>

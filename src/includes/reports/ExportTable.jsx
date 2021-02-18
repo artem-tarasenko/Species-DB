@@ -1,5 +1,7 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+
+import {renderSingleImage, renderObject, renderArray} from "../components/ReportRenders.jsx";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const defaultStyles = {
@@ -27,65 +29,59 @@ function ExportTable(cols, datas, title) {
 
     let table = [];
 
-    console.log("Passing title");
-    console.log(title);
-    console.log(cols);
-    console.log(datas);
-
     const tableHeadings = cols.map( item => {
         if(item.type === "text") {
             return { text: item.title, style: 'tableHeader'}
+
         } else if(item.type === "boolean") {
-            //console.log(item.title + " is bool, index " + index);
             return { text: item.title, style: 'tableHeader'}
+
         } else if(item.type === "array") {
-            //console.log(item.title + " is an array, index " + index);
             return { text: item.title, style: 'tableHeader'}
+
         } else if(item.type === "image") {
-            //console.log(item.title + " is an image, index " + index);
             return { text: item.title, style: 'tableHeader'}
+
+        } else if(item.type === "object") {
+            return { text: item.title, style: 'tableHeader'}
+
         } else {
-            //console.log("Error, unknown item, index " + index);
             return { text: "ERROR", style: 'tableHeader'};
         }
      });
 
 
-    const RenderObjects = obj => {
-        if(Array.isArray(obj)) {
-            //render from object
-            
-            
-            return "array";
+    function reformatData(item) {
+        if(typeof item === "string" || typeof item === "number" ) {
+            return item;
 
+        } else if(typeof item === "boolean") {
+            return item ? "Yes" : "No";
+
+        } else if(typeof item === "object" && !Array.isArray(item)) {
+            return renderObject(item);
+        
+        } else if(typeof item === "object" && Array.isArray(item)) {
+
+            if(item.length > 0){
+                if(item[0].mime) {
+                    return renderArray(item, "gallery");
+                } else if(item[0].Code) {
+                    //render directly without calling additional scripts
+                    return item.map( item => item.Code).join(", ");
+                }
+            }
+            return renderArray(item, "custom");
 
         } else {
-            //render from array
-
-
-            return "object";
+            console.log("ReformatData(): Unknown data format");
+            return "---";
         }
-
-    }
-
-    function reformatData(item) {
-            if(typeof item === "string" || typeof item === "number" ) {
-                return item;
-            } else if(typeof item === "boolean") {
-                return item ? "Yes" : "No";
-            } else if(typeof item === "object") {
-                return RenderObjects(item);
-            } else {
-                return "Missing data";
-            }
     }
      
     table.push(tableHeadings);
     datas.forEach( subarray => {
-        let tmp = subarray.map( item => {
-            return reformatData(item);
-            
-        })
+        let tmp = subarray.map( item => reformatData(item));
         table.push(tmp);
     });
 
@@ -95,7 +91,7 @@ function ExportTable(cols, datas, title) {
         
         function selectValue(item) {
             //if(item.text === "Имя" || item.text === "Имя (Ru)" || item.text === "Имя (En)" || item.text === "Вид") {
-            if( ["Имя", "Имя (Ru)", "Имя (En)", "Вид"].some( el => el === item.text) ) {
+            if( ["Имя", "Имя (Ru)", "Имя (En)", "Вид", "Виды"].some( el => el === item.text) ) {
                 return 150;
             } else if( ["Год", "Фото", "Галерея"].some( el => el === item.text) ) {
                 return 30; 
@@ -115,6 +111,9 @@ function ExportTable(cols, datas, title) {
     }
 
 
+//#############################################################################
+//#####     Export options  ###################################################
+//#############################################################################
 
     let docDefinition = {
         content: [

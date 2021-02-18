@@ -3,7 +3,7 @@ import MaterialTable from '@material-table/core';
 import axios from "axios";
 
 import endpoints from "./endpoints.jsx";
-import exportTable from "./ExportTable.jsx";
+import exportTable from "./reports/ExportTable.jsx";
 
 
 function Table() {

@@ -3,14 +3,12 @@ import MaterialTable from '@material-table/core';
 import axios from "axios";
 
 import endpoints from "./endpoints.jsx";
-import exportTable from "./ExportTable.jsx";
+import exportTable from "./reports/ExportTable.jsx";
 
 function Tanks() {
 	const [data, setData] = useState({headers: [], data: []}); //first array - headers to the table, second - table data
     const source = endpoints[1];
     const tableTitle = `Таблица "${source.localizedName}"`;
-
-    console.log(data);
     
     useEffect( () => getPosts(), [source]);
 

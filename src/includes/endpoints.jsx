@@ -1,5 +1,5 @@
-import {renderSingleImage, renderObject, renderArray} from "./Renders.jsx";
-import Drawer from "./Drawer.jsx";
+import {renderSingleImage, renderObject, renderArray} from "./components/TableRenders.jsx";
+import Drawer from "./components/Drawer.jsx";
 
 //###################################################################################
 //####        DATA           ########################################################
@@ -21,9 +21,12 @@ const endpoints = [
 			{field: "Brackets", title: "[ ]", type: "boolean"},
 			{field: "DescrAuthor", title: "Автор", type: "text"},
 			{field: "DescrYear", title: "Год", type: "text"},
-			{field: "ImageMain", title: "Фото", type: "image", filtering: false, render: rowData => renderSingleImage(rowData) },
-			{field: "Gallery", title: "Галерея", type: "array", filtering: false, render: rowData => <Drawer content={rowData} /> },
-			{field: "Tanks", title: "Танки", type: "array", filtering: false, render: (rowData) => renderArray(rowData, "tanks" ) },
+			{field: "ImageMain", title: "Фото", type: "image", filtering: false, 
+				render: rowData => renderSingleImage(rowData) },
+			{field: "Gallery", title: "Галерея", type: "array", filtering: false, 
+				render: rowData => <Drawer content={rowData} /> },
+			{field: "Tanks", title: "Танки", type: "array", filtering: false, 
+				render: (rowData) => renderArray(rowData, "tanks" ) },
 		]
 	},
 	{
@@ -32,10 +35,12 @@ const endpoints = [
 		localizedName: "Танки",
 		link: "http://10.1.5.149:1337/tanks",
 		headers: [
-			{field: "Zone", title: "Зона", type: "array", render: rowData => renderObject(rowData) },
+			{field: "Zone", title: "Зона", type: "array", 
+				render: rowData => renderObject(rowData) },
 			{field: "Code", title: "Код", type: "text"},
 			{field: "Name", title: "Имя", type: "text"},
-			{field: "Kinds", title: "Виды", type: "array", render: rowData => renderArray(rowData, "kinds") }
+			{field: "Kinds", title: "Виды", type: "array", 
+				render: rowData => renderArray(rowData, "kinds") }
 		]
 	},
 	{
@@ -46,8 +51,10 @@ const endpoints = [
 		headers: [
 			{field: "Code", title: "Код", type: "text"},
 			{field: "Name", title: "Имя", type: "text"},
-			{field: "Tanks", title: "Танки", type: "array", render: rowData => renderArray(rowData, "tanks") },
-			{field: "Contents", title: "Контент", type: "array", render: rowData => renderArray(rowData, "contents") }
+			{field: "Tanks", title: "Танки", type: "array", 
+				render: rowData => renderArray(rowData, "tanks") },
+			{field: "Contents", title: "Контент", type: "array", 
+				render: rowData => renderArray(rowData, "contents") }
 		]
 	},
 	{
@@ -56,10 +63,12 @@ const endpoints = [
 		localizedName: "Контент",
 		link: "http://10.1.5.149:1337/contents",
 		headers: [
-			{field: "Zone", title: "Зона", type: "object", render: rowData => renderObject(rowData)},
+			{field: "Zone", title: "Зона", type: "object", 
+				render: rowData => renderObject(rowData)},
 			{field: "Code", title: "Код", type: "text"},
 			{field: "Type", title: "Тип", type: "text"},
-			{field: "SpeciesList", title: "Виды", type: "array", render: rowData => renderArray(rowData, "kinds") }
+			{field: "SpeciesList", title: "Виды", type: "array", 
+				render: rowData => renderArray(rowData, "kinds") }
 		]
 	}
 ];
