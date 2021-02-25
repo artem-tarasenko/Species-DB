@@ -1,7 +1,10 @@
 import React from "react";
-import Modal from "./Modal.jsx";
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Modal from "./Modal.jsx";
+import SingleEntity from "./../SingleEntity.jsx";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 const serverURL = 'http://10.1.5.149:1337';
 
@@ -14,6 +17,21 @@ const LightTooltip = withStyles((theme) => ({
 	  fontSize: 14,
 	},
   }))(Tooltip);
+
+
+const renderLink = rowData => {
+	//rendering LINK to a table instead of just species name, passing rowData from table and type of item
+	//to use as a ref to render single item
+
+	return <Link to={{ 
+				pathname: "/entity", 
+				entity: {type: "species", data: {...rowData}} 
+			}}
+			>
+				{rowData.NameRus}
+				{/* <Button onClick={toggleDrawer("right", true)}>CLICK</Button> */}
+			</Link>
+}
 
 //###################################################################
 //###################################################################
@@ -28,9 +46,6 @@ const renderSingleImage = (object) => {
 }
 
 
-
-  
-  
 
 //###################################################################
 //###################################################################
@@ -52,7 +67,7 @@ const renderObject = rowData => {
 //###################################################################
 //###################################################################
 const renderArray = (obj, col) => {
-	console.log(obj);
+
 	const Kinds = () => {
 		let arr;
 
@@ -77,22 +92,42 @@ const renderArray = (obj, col) => {
                 return <Kinds />;
 
 			case "tanks":
-				return obj.Tanks.map( tank => 
-					<React.Fragment>
-						<LightTooltip placement="top" title={
-							<React.Fragment>
-								<p><b>{tank.Name}</b></p>
-								<hr />
-								<p>Видов: {tank.Kinds.length}</p>
-							</React.Fragment>
-						}>
-						<p>{tank.Code}</p>
-						</LightTooltip>
-					</React.Fragment>
-				);
+				return 	<>
+							<div className="table-cell-multiitem">
+								{obj.Tanks.map( tank => 
+									<React.Fragment>
+										<LightTooltip placement="top" title={
+											<React.Fragment>
+													<p><b>{tank.Name}</b></p>
+													<hr />
+													<p>Видов: {tank.Kinds.length}</p>
+											</React.Fragment>
+										}>
+										<p className="test">{tank.Code}</p>
+										</LightTooltip>
+									</React.Fragment>
+								)}
+							</div>
+						</>
 
             case "contents": 
-				return obj.Contents.map( content => content.Code).join(", ");
+				return 	<>
+							<div className="table-cell-multiitem">
+							{obj.Contents.map( content => 
+								<React.Fragment>
+									<LightTooltip placement="top" title={
+											<React.Fragment>
+													<p><b>{content.Type}</b></p>
+													<hr />
+													<p>Видов: {content.SpeciesList.length}</p>
+											</React.Fragment>
+										}>
+										<p>{content.Code}</p>
+									</LightTooltip>
+								</React.Fragment>
+							)}
+							</div>
+						</>
 
             case "custom": 
 				return obj.map( item => item.NameRus ).join(", ");
@@ -111,4 +146,4 @@ const renderArray = (obj, col) => {
 }
 
 
-export {renderSingleImage, renderObject, renderArray};
+export {renderSingleImage, renderObject, renderArray, renderLink};

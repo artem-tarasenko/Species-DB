@@ -34,9 +34,6 @@ function ZoomIcon(props) {
 
 export default function TemporaryDrawer(props) {
     const [state, setState] = React.useState({
-        top: false,
-        left: false,
-        bottom: false,
         right: false,
     });
 
@@ -52,14 +49,15 @@ export default function TemporaryDrawer(props) {
         return;
     }
 
-    setState({ ...state, [anchor]: open });
+
+    setState({ right: open });
     };
+
 
     function resizePreview() {
         const container = document.getElementById("preview-container");
         container.classList.toggle("extend");        
     }
-
 
 
     const gallery = anchor => (
@@ -75,34 +73,34 @@ export default function TemporaryDrawer(props) {
         </div>
     );
 
-  return (
-    <div>
+    return (
+        <div>
 
-        <React.Fragment key={"right"}>
+            <React.Fragment key={"right"}>
 
-                <Button onClick={imageCount > 0 ? toggleDrawer("right", true) : toggleDrawer("right", false)}>
-                    <Badge color={imageCount > 0 ? "primary" : "secondary" } badgeContent={imageCount} showZero>
-                        <BurstModeOutlinedIcon />
-                    </Badge>    
-                </Button>
+                    <Button onClick={imageCount > 0 ? toggleDrawer("right", true) : toggleDrawer("right", false)}>
+                        <Badge color={imageCount > 0 ? "primary" : "secondary" } badgeContent={imageCount} showZero>
+                            <BurstModeOutlinedIcon />
+                        </Badge>    
+                    </Button>
 
-                <Drawer
-                    anchor={"right"}
-                    open={state["right"]}
-                    classes={"test"}
-                    onClose={toggleDrawer("right", false)}
-                    >
-                        <div className="preview-container" id="preview-container">
-                            <button className="preview-resize sticky" onClick={resizePreview}>
-                                <ZoomIcon />
-                            </button>
-                            <div className="preview">
-                                {gallery("right")}
+                    <Drawer
+                        anchor={"right"}
+                        open={state["right"]}
+                        classes={"test"}
+                        onClose={toggleDrawer("right", false)}
+                        >
+                            <div className="preview-container" id="preview-container">
+                                <button className="preview-resize sticky" onClick={resizePreview}>
+                                    <ZoomIcon />
+                                </button>
+                                <div className="preview">
+                                    {gallery("right")}
+                                </div>
                             </div>
-                        </div>
-                </Drawer>
-        </React.Fragment>
+                    </Drawer>
+            </React.Fragment>
 
-    </div>
-  );
+        </div>
+    );
 }

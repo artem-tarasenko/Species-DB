@@ -1,4 +1,4 @@
-import {renderSingleImage, renderObject, renderArray} from "./components/TableRenders.jsx";
+import {renderSingleImage, renderObject, renderArray, renderLink} from "./components/TableRenders.jsx";
 import Drawer from "./components/Drawer.jsx";
 
 //###################################################################################
@@ -13,7 +13,8 @@ const endpoints = [
 		link: "http://10.1.5.149:1337/kinds",
 		headers: 
 		[		
-			{field: "NameRus", title: "Имя (Ru)", type: "text"},
+			{field: "NameRus", title: "Имя (Ru)", type: "text",
+				render: rowData => renderLink(rowData)},
 			{field: "NameEng", title: "Имя (En)", type: "text"},
 			{field: "Phylum", title: "Тип", type: "text"},
 			{field: "Class", title: "Класс", type: "text"},
